@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 450" fill="none" stroke="#392d25" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+  <defs>
+    <g id="corner">
+      <path d="M12 66V24Q12 12 24 12H66M20 54V29Q20 20 29 20H54"/>
+      <path d="M15 48C43 48 48 26 37 25C28 24 27 35 35 37C46 40 49 17 62 17M25 15C25 41 43 44 44 33M30 30C40 19 51 22 48 33C46 42 35 45 30 30Z"/>
+      <path d="M12 77L16 72L20 77L16 82ZM77 12L82 16L77 20L72 16Z"/>
+    </g>
+    <g id="flourish">
+      <path d="M98 20C112 11 123 29 135 20C140 16 140 9 146 9M202 20C188 11 177 29 165 20C160 16 160 9 154 9M142 20L150 13L158 20L150 27Z"/>
+    </g>
+  </defs>
+  <use href="#corner"/>
+  <use href="#corner" transform="translate(300 0) scale(-1 1)"/>
+  <use href="#corner" transform="translate(0 450) scale(1 -1)"/>
+  <use href="#corner" transform="translate(300 450) scale(-1 -1)"/>
+  <use href="#flourish"/>
+  <use href="#flourish" transform="translate(0 450) scale(1 -1)"/>
+</svg>

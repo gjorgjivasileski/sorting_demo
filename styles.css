@@ -1,0 +1,123 @@
+:root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #23372f; background: #f3f4ed; --page-padding: clamp(12px, 1.25vw, 24px); --card-gap: .75rem; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: var(--page-padding); background: radial-gradient(ellipse at top right, #dfe9da80, transparent 60%); min-height: 100dvh; }
+main { width: 100%; height: calc(100dvh - 2 * var(--page-padding)); min-height: 460px; display: flex; flex-direction: column; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid #23372f25; }
+.toolbar, .board-info { flex-shrink: 0; }
+.eyebrow { margin: 0 0 10px; font-size: .7rem; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; color: #64785e; }
+h1 { margin: 0; font-size: clamp(1.8rem, 3vw, 2.8rem); letter-spacing: -.055em; line-height: 1.15; }
+h1 span { color: #729150; }
+.subtitle { margin: 12px 0 0; color: #68776d; font-size: .9rem; line-height: 1.6; }
+.sort-control { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+label { font-size: .75rem; font-weight: 650; color: #68776d; }
+select, button { min-height: 46px; border: 1px solid #d2d9cd; border-radius: 12px; background: #ffffffc9; color: inherit; font: inherit; font-size: .85rem; }
+select { max-width: 100%; padding: 10px 30px 10px 12px; cursor: pointer; }
+button { cursor: pointer; }
+select:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid #678b49; outline-offset: 4px; }
+.deck-controls { display: flex; flex: 0 0 auto; gap: 8px; }
+.deck-toggle { display: inline-flex; flex: 0 0 46px; width: 46px; height: 46px; align-items: center; justify-content: center; padding: 7px; background: #233f32; color: #fff; border-color: #233f32; box-shadow: 0 3px 8px #233f3212; transition: background .2s, box-shadow .2s; }
+.network-toggle { background: #ffffffc9; border-color: #d2d9cd; }
+.network-toggle img { display: block; width: 30px; height: 30px; object-fit: contain; }
+.deck-toggle:hover { background: #365a43; box-shadow: 0 4px 12px #233f3226; }
+.network-toggle:hover { background: #edf2e6; }
+.deck-toggle:disabled { opacity: .5; cursor: default; }
+.deck-toggle[aria-pressed="true"] { background: #e3eccf; color: #233f32; border-color: #b5c69a; }
+.jack-icon { display: flex; flex-direction: column; justify-content: center; width: 22px; height: 29px; border-radius: 4px; background: #fffdf5; color: #23372f; font-family: Georgia, serif; font-size: 13px; font-weight: bold; line-height: 12px; transform: rotate(-10deg); box-shadow: 2px 2px 0 #a4b895; transition: transform .35s; }
+.deck-toggle:hover .jack-icon { transform: rotate(10deg); }
+.posts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: var(--card-gap); position: relative; }
+.posts-grid.is-positioned { display: block; }
+.post-card { position: relative; min-width: 0; transform-origin: center 48px; }
+.card-flip { position: relative; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.22,.8,.22,1); }
+.card-front { position: relative; display: flow-root; backface-visibility: hidden; transform: rotateY(0deg); }
+.card-back { --back-ink: #294d68; --back-wash: #81b5dc; position: absolute; inset: 0; display: grid; place-items: center; isolation: isolate; overflow: hidden; border: 1px solid #88775f; border-radius: 6% / 4%; background: #eee5d3 url('images/rustic-paper.png') center / 100% 100%; background-blend-mode: multiply; backface-visibility: hidden; transform: rotateY(180deg); box-shadow: inset 0 0 12px #6a513c26, 0 1px 2px #30271d66, 0 7px 18px #30271d26; }
+.post-card[data-platform="mastodon"] .card-back { --back-ink: #553767; --back-wash: #bd9cdd; }
+.post-card[data-platform="x"] .card-back { --back-ink: #7a342e; --back-wash: #de8087; }
+.post-card[data-platform="threads"] .card-back { --back-ink: #343435; --back-wash: #858585; }
+/* Aged stock shows through the colored field and the overprinted artwork. */
+.card-back::before { content: ''; position: absolute; inset: 5%; border: 4px double var(--back-ink); border-radius: 3% / 2%; background: radial-gradient(ellipse at center, #efe2cc 0%, var(--back-wash) 75%); box-shadow: inset 0 0 0 4px #ddd0b750, inset 0 0 24px #392d2526; mix-blend-mode: multiply; }
+.post-card[data-platform="threads"] .card-back::before { background: radial-gradient(ellipse at center, #d2d2d2, var(--back-wash) 80%), url('images/rustic-paper.png') center / 100% 100%; background-blend-mode: multiply; filter: grayscale(1); mix-blend-mode: normal; }
+.card-back::after { content: ''; position: absolute; inset: 7%; background: url('images/rustic-scrollwork.svg') center / 100% 100% no-repeat; opacity: .65; mix-blend-mode: multiply; pointer-events: none; }
+.card-back img { position: relative; z-index: 1; width: 56%; height: 48%; object-fit: contain; filter: grayscale(.5) saturate(.9) contrast(1.25); opacity: .88; mix-blend-mode: multiply; }
+.is-face-down .card-flip { height: var(--deck-height); transform: rotateY(180deg); }
+.is-face-down .card-front { visibility: hidden; transition: visibility 0s linear .22s; }
+.is-face-down { height: var(--deck-height); overflow: clip; border-radius: 6% / 4%; }
+.is-positioned > .post-card { position: absolute; top: 0; left: 0; }
+.post-card .twitter-tweet { width: 100% !important; max-width: none !important; margin: 0 !important; }
+.post-card .twitter-tweet iframe { width: 100% !important; max-width: none !important; }
+.embed-mount { min-width: 0; width: var(--embed-width, 100%); zoom: var(--embed-scale, 1); }
+.embed-status { margin: 0; padding: 14px; border-radius: 9px; background: #f2f5ee; color: #647268; font-size: .8rem; line-height: 1.6; }
+.post-fallback { margin: 0; padding: 10px; color: #38493f; font-size: .94rem; line-height: 1.7; overflow-wrap: anywhere; }
+.post-fallback p { margin: 0 0 18px; }
+.embed-status:not([hidden]) ~ .post-fallback { margin-top: 14px; }
+a { color: #386a50; text-underline-offset: 3px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 600px) {
+  .toolbar { gap: 20px; margin-bottom: 24px; }
+  .sort-control { width: 100%; gap: 8px; }
+  label { width: 100%; }
+  select { flex: 1; min-width: 0; width: 0; padding-right: 8px; }
+  .deck-controls { flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+
+/* The board keeps two masonry cards per column and extends horizontally. */
+.board-info { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+.collection-label { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0; font-size: .8rem; font-weight: 650; }
+.platform-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.x-dot { background: #23372f; }
+.bluesky-dot { background: #1185fe; margin-left: 12px; }
+.collection-total { border-left: 1px solid #cbd5c7; margin-left: 8px; padding-left: 14px; color: #68776d; font-weight: 400; }
+.counts-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; font-size: .72rem; color: #68776d; }
+.text-button { background: transparent; border: 0; min-height: 32px; padding: 4px 0; color: #386a50; font-size: .75rem; text-decoration: underline; text-underline-offset: 3px; }
+.text-button:disabled { color: #68776d; cursor: wait; }
+.posts-viewport { flex: 1; min-height: 160px; overflow: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding: 12px 0 20px; cursor: grab; }
+.posts-viewport::-webkit-scrollbar { display: none; }
+.posts-viewport:focus-visible { outline: 3px solid #678b49; outline-offset: 3px; }
+.bluesky-frame, .threads-frame { display: block; width: 100%; height: 300px; border: 0; }
+/* Mastodon cards are local markup so media needs no Hide or ALT badges. */
+.mastodon-post { overflow: hidden; border: 1px solid #dce0e8; border-radius: 12px; background: #fff; color: #282c37; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 15px; line-height: 1.5; }
+.mastodon-post header { display: flex; align-items: flex-start; gap: 12px; padding: 16px 16px 12px; }
+.mastodon-profile { display: flex; flex: 1; align-items: center; gap: 10px; min-width: 0; color: inherit; text-decoration: none; }
+.mastodon-brand { display: block; flex: 0 0 26px; margin-top: 2px; }
+.mastodon-brand img { display: block; width: 26px; height: 28px; object-fit: contain; }
+.mastodon-avatar { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 7px; object-fit: cover; background: #eceef3; }
+.mastodon-author { display: flex; flex-direction: column; min-width: 0; }
+.mastodon-author strong, .mastodon-author > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mastodon-author > span { font-size: 13px; color: #667080; }
+.mastodon-content { padding: 0 16px; overflow-wrap: anywhere; }
+.mastodon-content p { margin: 0 0 14px; }
+.mastodon-content a { color: #6153a6; }
+.mastodon-content .invisible { display: none; }
+.mastodon-content .ellipsis::after { content: '…'; }
+.mastodon-media { display: block; margin: 0 12px 12px; overflow: hidden; border: 1px solid #e3e5ec; border-radius: 8px; }
+.mastodon-media img { display: block; width: 100%; height: auto; }
+.mastodon-preview { display: block; margin: 0 12px 12px; overflow: hidden; border: 1px solid #dce0e8; border-radius: 8px; color: inherit; text-decoration: none; }
+.mastodon-preview > img { display: block; width: 100%; aspect-ratio: 1.91; object-fit: cover; }
+.mastodon-preview-copy { display: flex; flex-direction: column; gap: 4px; padding: 12px; }
+.mastodon-preview-copy small, .mastodon-preview-copy > span { color: #667080; font-size: 12px; }
+.mastodon-preview-copy strong { font-size: 14px; }
+.mastodon-post footer { padding: 0 16px 12px; }
+.mastodon-date { display: block; margin-bottom: 12px; color: #667080; text-decoration: none; font-size: 12px; }
+.mastodon-counts { display: flex; gap: 24px; padding-top: 10px; border-top: 1px solid #eceef3; }
+.mastodon-counts a { display: inline-flex; align-items: center; gap: 6px; color: #667080; text-decoration: none; font-size: 13px; }
+.mastodon-profile:hover strong, .mastodon-counts a:hover, .mastodon-date:hover { color: #6153a6; }
+/* Transform Threads as a whole: CSS zoom can change its internal text wrapping
+   without triggering the native embed's height reporter. */
+.post-card[data-platform="threads"] .embed-mount { width: 100%; height: calc(var(--embed-height, 300px) * var(--embed-scale, 1)); overflow: hidden; zoom: 1; }
+.threads-frame { width: var(--embed-width, 384px); border-radius: 12px; transform: scale(var(--embed-scale, 1)); transform-origin: top left; }
+.posts-viewport.is-dragging { cursor: grabbing; user-select: none; }
+.is-dragging iframe { pointer-events: none; }
+.interaction-toggle { padding: 10px 12px; }
+.interaction-toggle[aria-pressed="true"] { background: #e3eccf; border-color: #b5c69a; }
+.card-surface { position: absolute; inset: 0; z-index: 2; display: block; border-radius: 12px; cursor: grab; touch-action: pan-x pan-y; }
+.card-surface:focus-visible { outline: 3px solid #678b49; outline-offset: -3px; }
+.posts-viewport.is-interactive .card-surface { display: none; }
+.posts-viewport.is-interactive { cursor: auto; }
+.is-dragging .card-surface { cursor: grabbing; }
+@media (max-width: 600px) {
+  .interaction-toggle { flex-basis: 100%; }
+}
+@media (max-width: 600px) {
+  .board-info { align-items: flex-start; }
+  .counts-controls { gap: 4px 12px; }
+}
