@@ -200,26 +200,32 @@
   // iframe loading. Reuse count lookups where the providers expose both.
   async function refreshBlueskyCounts() {
     if (!blueskyEmbeds.length) return;
-    try {
-      const params = new URLSearchParams();
-      blueskyEmbeds.forEach(embed => params.append('uris', embed.element.dataset.uri));
-      const { response, data } = await fetchPostData(`https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts?${params}`);
-      if (!response.ok || !Array.isArray(data?.posts)) throw new Error('Invalid posts response');
-      const byUri = new Map(data.posts.map(post => [post.uri, post]));
-      await Promise.allSettled(blueskyEmbeds.map(async embed => {
-        const post = byUri.get(embed.element.dataset.uri);
-        if (post) {
-          setAvailability(embed, 'active');
-          updateCounts(embed, post.likeCount, post.replyCount);
-        } else {
-          await checkBlueskyPost(embed);
-        }
-      }));
-      grid.dispatchEvent(new CustomEvent('posts:metrics'));
-    } catch {
-      // A failed batch says nothing about any individual post's existence.
-      blueskyEmbeds.forEach(embed => setAvailability(embed, 'unknown'));
-    }
+    // getPosts accepts at most 25 URIs. Imported collections can grow beyond
+    // that; each failed batch retains its cards and saved sorting counts.
+    const batches = [];
+    for (let i = 0; i < blueskyEmbeds.length; i += 25) batches.push(blueskyEmbeds.slice(i, i + 25));
+    await Promise.allSettled(batches.map(async batch => {
+      try {
+        const params = new URLSearchParams();
+        batch.forEach(embed => params.append('uris', embed.element.dataset.uri));
+        const { response, data } = await fetchPostData(`https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts?${params}`);
+        if (!response.ok || !Array.isArray(data?.posts)) throw new Error('Invalid posts response');
+        const byUri = new Map(data.posts.map(post => [post.uri, post]));
+        await Promise.allSettled(batch.map(async embed => {
+          const post = byUri.get(embed.element.dataset.uri);
+          if (post) {
+            setAvailability(embed, 'active');
+            updateCounts(embed, post.likeCount, post.replyCount);
+          } else {
+            await checkBlueskyPost(embed);
+          }
+        }));
+      } catch {
+        // A failed batch says nothing about any individual post's existence.
+        batch.forEach(embed => setAvailability(embed, 'unknown'));
+      }
+    }));
+    grid.dispatchEvent(new CustomEvent('posts:metrics'));
   }
 
   async function refreshMastodonCounts() {
