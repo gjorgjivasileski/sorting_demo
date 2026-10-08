@@ -1,285 +1,244 @@
-(() => {
-  const grid = document.getElementById('posts-grid');
-  const availabilityStatus = document.getElementById('availability-status');
-  let removedCount = 0;
-  const platformNames = { x: 'X', bluesky: 'Bluesky', mastodon: 'Mastodon', threads: 'Threads' };
-  const embeds = Array.from(grid.querySelectorAll('.post-card'), element => {
-    const platform = element.dataset.platform;
-    const name = platformNames[platform];
-    const fallback = element.querySelector('.post-fallback');
-    const mount = document.createElement('div');
-    mount.className = 'embed-mount';
-    mount.inert = !document.getElementById('posts-viewport').classList.contains('is-interactive');
-    const status = document.createElement('p');
-    status.className = 'embed-status';
-    status.textContent = `Loading ${name} post…`;
-    fallback.hidden = true;
-    element.dataset.embedState = 'loading';
-    element.dataset.availability = 'checking';
-    element.querySelector('.card-front').prepend(status, mount);
-    if (platform === 'mastodon') {
-      // Saved, locally styled cards let us omit native Hide/ALT badges while
-      // retaining image descriptions and working links, even if the API fails.
-      const card = element.querySelector('.mastodon-post');
-      mount.append(card);
-      card.hidden = false;
-      status.hidden = true;
-      element.dataset.embedState = 'ready';
-    }
-    return { element, platform, name, fallback, mount, status };
-  });
+// Only the URL, network, and native embed container are managed here.
+// Post bodies, media, links, and counts stay inside the networks' own views.
+const NETWORKS = {
+  x: { name: 'X' },
+  bluesky: { name: 'Bluesky' },
+  mastodon: { name: 'Mastodon' },
+  threads: { name: 'Threads' },
+};
 
-  function showFallback(embed) {
-    if (embed.removed || embed.element.dataset.embedState === 'ready') return;
-    embed.element.dataset.embedState = 'unavailable';
-    embed.status.textContent = `${embed.name} embed unavailable. Read the saved post or open the original below.`;
-    embed.status.hidden = false;
-    embed.fallback.hidden = false;
-    embed.mount.hidden = true;
-  }
-  function showReady(embed) {
-    if (embed.removed) return;
-    embed.element.dataset.embedState = 'ready';
-    embed.mount.hidden = false;
-    embed.fallback.hidden = true;
-    embed.status.hidden = true;
-  }
+const frameRecords = new Set();
+const handleRequests = new Map();
+const EMBED_TIMEOUT = 25000;
+const THREADS_WIDTH = 384;
+let twitterRequest;
+let nextId = 0;
 
-  // Iframe providers share lazy loading and fallbacks, but use different
-  // resize messages. Match the expected origin AND sending window for each.
-  const blueskyEmbeds = embeds.filter(embed => embed.platform === 'bluesky');
-  const mastodonEmbeds = embeds.filter(embed => embed.platform === 'mastodon');
-  const threadsEmbeds = embeds.filter(embed => embed.platform === 'threads');
-  const frames = new Map();
-  const pendingFrames = new Map();
-  function setAvailability(embed, state) {
-    if (embed.removed) return;
-    embed.element.dataset.availability = state;
-    embed.element.dataset.availabilityChecked = new Date().toISOString();
+export function parsePosts(text) {
+  const posts = new Map();
+  let skipped = 0;
+  let duplicates = 0;
+  for (const line of text.split(/\r?\n/)) {
+    const value = line.trim();
+    if (!value || value.startsWith('#')) continue;
+    const post = parsePost(value);
+    if (!post) skipped++;
+    else if (posts.has(post.key)) duplicates++;
+    else posts.set(post.key, post);
   }
-  function removePost(embed) {
-    if (embed.removed) return;
-    setAvailability(embed, 'missing');
-    embed.removed = true;
-    visibility.unobserve(embed.element);
-    pendingFrames.delete(embed.element);
-    for (const [id, item] of frames) {
-      if (item.embed !== embed) continue;
-      clearTimeout(item.timeout);
-      frames.delete(id);
+  return { posts: [...posts.values()], skipped, duplicates };
+}
+
+function parsePost(value) {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== 'https:' || url.username || url.password) return null;
+    url.search = '';
+    url.hash = '';
+    url.pathname = url.pathname.replace(/\/$/, '');
+    const host = url.hostname.replace(/^www\./, '');
+    let match;
+    if (['x.com', 'twitter.com', 'mobile.twitter.com'].includes(host)
+      && (match = url.pathname.match(/\/(?:status|statuses)\/(\d+)$/))) {
+      return { network: 'x', id: match[1], key: `x:${match[1]}`, url: `https://x.com/i/status/${match[1]}` };
     }
-    if (embed.element.contains(document.activeElement)) {
-      document.getElementById('posts-viewport').focus({ preventScroll: true });
+    if (host === 'bsky.app' && (match = url.pathname.match(/^\/profile\/([^/]+)\/post\/([a-z0-9]+)$/))) {
+      return { network: 'bluesky', handle: match[1], id: match[2], key: `bluesky:${match[1]}/${match[2]}`, url: url.href };
     }
-    embed.element.remove();
-    grid.dispatchEvent(new CustomEvent('posts:remove', { detail: { element: embed.element } }));
-    removedCount++;
-    availabilityStatus.textContent = `${removedCount} ${removedCount === 1 ? 'post is' : 'posts are'} no longer available and ${removedCount === 1 ? 'has' : 'have'} been removed from this board.`;
+    if (['threads.com', 'threads.net'].includes(host)
+      && (match = url.pathname.match(/^\/(@[^/]+)\/post\/([\w-]+)$/))) {
+      return { network: 'threads', id: match[2], key: `threads:${match[2]}`, url: `https://www.threads.com/${match[1]}/post/${match[2]}` };
+    }
+    if ((match = url.pathname.match(/^\/@[^/]+\/(\d+)$/))
+      || (match = url.pathname.match(/^\/users\/[^/]+\/statuses\/(\d+)$/))) {
+      return { network: 'mastodon', id: match[1], key: `mastodon:${host}/${match[1]}`, url: url.href };
+    }
+  } catch { /* An invalid line should not stop the rest of the feed. */ }
+  return null;
+}
+
+export function createCard(post) {
+  const network = NETWORKS[post.network];
+  const element = document.createElement('li');
+  element.className = 'post-card';
+  element.dataset.network = post.network;
+  element.dataset.state = 'waiting';
+  element.dataset.post = post.key;
+  element.setAttribute('aria-label', `${network.name} post`);
+  // Everything interpolated here is a local constant, never post content.
+  element.innerHTML = `
+    <div class="card-shell"><div class="card-surface" inert>
+      <div class="embed-mount" aria-hidden="true" inert></div>
+      <div class="embed-placeholder">
+        <span class="placeholder-network">${network.name}</span>
+        <span class="placeholder-lines" aria-hidden="true"></span>
+        <p class="placeholder-message">Waiting to load…</p>
+        <a class="original-link" target="_blank" rel="noopener noreferrer">Open on ${network.name} ↗</a>
+      </div>
+    </div></div>`;
+  element.querySelector('.original-link').href = post.url;
+  return { post, element, mount: element.querySelector('.embed-mount'), id: ++nextId, started: false };
+}
+
+function markReady(card) {
+  clearTimeout(card.timeout);
+  clearInterval(card.handshake);
+  card.element.dataset.state = 'ready';
+  card.mount.removeAttribute('aria-hidden');
+  card.mount.inert = false;
+}
+
+function markUnavailable(card) {
+  if (card.element.dataset.state === 'ready') return;
+  clearTimeout(card.timeout);
+  clearInterval(card.handshake);
+  card.element.dataset.state = 'unavailable';
+  card.element.querySelector('.placeholder-message').textContent = 'The preview couldn’t load. You can still open the original post.';
+}
+
+export async function loadCard(card) {
+  if (card.started) return;
+  card.started = true;
+  card.element.dataset.state = 'loading';
+  card.element.querySelector('.placeholder-message').textContent = 'Loading the original post…';
+  card.timeout = setTimeout(() => markUnavailable(card), EMBED_TIMEOUT);
+  try {
+    let { post } = card;
+    if (post.network === 'mastodon' && /^\/@[^/]+@[^/]+\//.test(new URL(post.url).pathname)) {
+      // A Mastodon instance redirects remote embeds instead of rendering them.
+      // Resolve the original, including Bluesky posts shared through Bridgy.
+      post = await resolveFederatedPost(post);
+      card.post = post;
+      const network = NETWORKS[post.network];
+      card.element.dataset.network = post.network;
+      card.element.setAttribute('aria-label', `${network.name} post`);
+      card.element.querySelector('.placeholder-network').textContent = network.name;
+      const original = card.element.querySelector('.original-link');
+      original.href = post.url;
+      original.textContent = `Open on ${network.name} ↗`;
+    }
+    if (post.network === 'x') {
+      const twitter = await loadTwitter();
+      const iframe = await twitter.widgets.createTweet(post.id, card.mount, {
+        theme: 'light', conversation: 'none', dnt: true, align: 'center',
+        width: Math.min(550, Math.round(card.mount.getBoundingClientRect().width)),
+      });
+      if (!iframe) throw new Error('No X embed returned');
+      iframe.title = 'X post';
+      markReady(card);
+      return;
+    }
+
+    let src = `${post.url}/embed`;
+    if (post.network === 'bluesky') {
+      const did = post.handle.startsWith('did:') ? post.handle : await resolveHandle(post.handle);
+      const identity = encodeURIComponent(did).replaceAll('%3A', ':');
+      src = `https://embed.bsky.app/embed/${identity}/app.bsky.feed.post/${post.id}?id=${card.id}&colorMode=light`;
+    } else if (post.network === 'threads') {
+      src += '/';
+    }
+    const frame = document.createElement('iframe');
+    frame.title = `${NETWORKS[post.network].name} post`;
+    frame.src = src;
+    frame.height = '400';
+    frame.setAttribute('scrolling', 'no');
+    frame.allow = 'fullscreen';
+    frame.referrerPolicy = 'strict-origin-when-cross-origin';
+    card.frame = frame;
+    card.origin = new URL(src).origin;
+    frameRecords.add(card);
+    frame.addEventListener('error', () => markUnavailable(card));
+    if (post.network === 'mastodon') {
+      frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+      frame.addEventListener('load', () => requestMastodonHeight(card));
+    }
+    if (post.network === 'threads') {
+      card.resizeObserver = new ResizeObserver(() => scaleThreads(card));
+      card.resizeObserver.observe(card.mount);
+      scaleThreads(card);
+    }
+    card.mount.append(frame);
+    if (post.network === 'mastodon') {
+      // Images can delay iframe.onload even after its message listener is ready.
+      card.handshake = setInterval(() => requestMastodonHeight(card), 1000);
+      // Re-request after width changes, even on older Mastodon instances.
+      card.resizeObserver = new ResizeObserver(() => requestMastodonHeight(card));
+      card.resizeObserver.observe(card.mount);
+    }
+  } catch {
+    markUnavailable(card);
   }
-  // Start loading when a card is near the screen. Offscreen native embeds may
-  // defer rendering, so their timeout must not expire before they are viewed.
-  const visibility = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const item = pendingFrames.get(entry.target);
-      if (!item) return;
-      visibility.unobserve(entry.target);
-      pendingFrames.delete(entry.target);
-      item.timeout = setTimeout(() => showFallback(item.embed), 30000);
-      item.iframe.src = item.src;
-      item.embed.mount.append(item.iframe);
-    });
-  }, { rootMargin: '160px 0px' });
-  window.addEventListener('message', event => {
-    let item;
+}
+
+function requestMastodonHeight(card) {
+  card.frame.contentWindow?.postMessage({ type: 'setHeight', id: card.id }, card.origin);
+}
+
+function scaleThreads(card) {
+  card.mount.style.setProperty('--embed-scale', card.mount.getBoundingClientRect().width / THREADS_WIDTH);
+}
+
+window.addEventListener('message', event => {
+  for (const card of frameRecords) {
+    if (event.source !== card.frame.contentWindow || event.origin !== card.origin) continue;
+    const data = event.data;
     let height;
-    if (typeof event.data === 'number') {
-      // Threads sends the height itself, without an ID. Match its iframe window.
-      item = [...frames.values()].find(item => item.embed.platform === 'threads'
-        && event.source === item.iframe.contentWindow);
-      height = event.data;
-    } else if (event.data && typeof event.data === 'object') {
-      item = frames.get(String(event.data.id));
-      if (item?.embed.platform === 'threads') return;
-      height = Number(event.data.height);
+    if (card.post.network === 'threads') {
+      if (typeof data === 'number' || (typeof data === 'string' && /^\d+(\.\d+)?$/.test(data))) height = Number(data);
+    } else if (data && typeof data === 'object' && String(data.id) === String(card.id)) {
+      if (card.post.network === 'bluesky' || data.type === 'setHeight') height = Number(data.height);
     }
-    if (!item || event.origin !== item.origin || event.source !== item.iframe.contentWindow) return;
-    if (!Number.isFinite(height) || height <= 0 || height > 20000) return;
-    item.iframe.style.height = `${Math.ceil(height)}px`;
-    if (item.embed.platform === 'threads') {
-      item.embed.mount.style.setProperty('--embed-height', `${Math.ceil(height)}px`);
-    }
-    showReady(item.embed);
-    clearTimeout(item.timeout);
-  });
-  function registerFrame(embed, id, src, index) {
-    const iframe = document.createElement('iframe');
-    iframe.className = `${embed.platform}-frame`;
-    iframe.title = `${embed.name} post ${index + 1}`;
-    iframe.setAttribute('scrolling', 'no');
-    const origin = new URL(src).origin;
-    const item = { iframe, embed, src, origin, timeout: null };
-    if (embed.platform === 'threads') iframe.allow = 'fullscreen';
-    iframe.addEventListener('error', () => { clearTimeout(item.timeout); showFallback(embed); });
-    frames.set(id, item);
-    pendingFrames.set(embed.element, item);
-    visibility.observe(embed.element);
+    if (!Number.isFinite(height) || height < 50 || height > 20000) return;
+    card.frame.height = String(Math.ceil(height));
+    if (card.post.network === 'threads') card.mount.style.setProperty('--embed-height', `${Math.ceil(height)}px`);
+    markReady(card);
+    return;
   }
-  blueskyEmbeds.forEach((embed, index) => {
-    const id = `post-${index}`;
-    const params = new URLSearchParams({ id, colorMode: 'light' });
-    registerFrame(embed, id, `https://embed.bsky.app/embed/${embed.element.dataset.uri.slice(5)}?${params}`, index);
-  });
-  threadsEmbeds.forEach((embed, index) => {
-    registerFrame(embed, `threads-${index}`, `${embed.element.dataset.postUrl}/embed/`, index);
-  });
+});
 
-  // Keep the existing official X embeds, including late-load fallback recovery.
-  const xEmbeds = embeds.filter(embed => embed.platform === 'x');
-  const xTimeout = setTimeout(() => xEmbeds.forEach(showFallback), 30000);
-  window.twttr = window.twttr || { _e: [], ready(callback) { this._e.push(callback); } };
-  window.twttr.ready(async twitter => {
-    await Promise.allSettled(xEmbeds.map(async embed => {
-      if (embed.removed) return;
-      try {
-        embed.mount.hidden = false;
-        const card = await twitter.widgets.createTweet(embed.element.dataset.postId, embed.mount,
-          { theme: 'light', conversation: 'none', cards: 'visible', dnt: true });
-        if (!card) throw new Error('Post unavailable');
-        showReady(embed);
-      } catch { showFallback(embed); }
+function resolveHandle(handle) {
+  if (!handleRequests.has(handle)) {
+    handleRequests.set(handle, fetch(`https://public.api.bsky.app/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(handle)}`, {
+      signal: AbortSignal.timeout(15000), credentials: 'omit',
+    }).then(async response => {
+      if (!response.ok) throw new Error('Handle lookup failed');
+      const { did } = await response.json();
+      if (typeof did !== 'string' || !did.startsWith('did:')) throw new Error('Invalid DID');
+      return did;
     }));
-    clearTimeout(xTimeout);
-  });
-  const widgetScript = document.createElement('script');
-  widgetScript.src = 'https://platform.twitter.com/widgets.js';
-  widgetScript.async = true;
-  widgetScript.addEventListener('error', () => { clearTimeout(xTimeout); xEmbeds.forEach(showFallback); });
-  document.head.append(widgetScript);
+  }
+  return handleRequests.get(handle);
+}
 
-  async function fetchPostData(url) {
-    const response = await fetch(url, {
-      signal: AbortSignal.timeout(15000), credentials: 'omit', cache: 'no-store',
+async function resolveFederatedPost(post) {
+  const origin = new URL(post.url).origin;
+  const response = await fetch(`${origin}/api/v1/statuses/${post.id}`, {
+    signal: AbortSignal.timeout(15000), credentials: 'omit',
+  });
+  if (!response.ok) throw new Error('Federated post lookup failed');
+  const status = await response.json();
+  let source = new URL(status.url);
+  if (source.hostname === 'fed.brid.gy' && source.pathname.startsWith('/r/https://')) {
+    source = new URL(source.pathname.slice(3));
+  }
+  const original = parsePost(source.href);
+  if (!original) throw new Error('No supported native embed for this source');
+  return original;
+}
+
+function loadTwitter() {
+  if (!twitterRequest) {
+    twitterRequest = new Promise((resolve, reject) => {
+      if (window.twttr?.widgets) return resolve(window.twttr);
+      const timeout = setTimeout(() => reject(new Error('X timed out')), EMBED_TIMEOUT);
+      window.twttr = window.twttr || { _e: [], ready(callback) { this._e.push(callback); } };
+      window.twttr.ready(twitter => { clearTimeout(timeout); resolve(twitter); });
+      const script = document.createElement('script');
+      script.src = 'https://platform.twitter.com/widgets.js';
+      script.async = true;
+      script.addEventListener('error', () => { clearTimeout(timeout); reject(new Error('X script unavailable')); });
+      document.head.append(script);
     });
-    // A genuine 404 may have an HTML error body (notably X oEmbed).
-    const data = await response.json().catch(() => null);
-    return { response, data };
   }
-
-  function updateCounts(embed, likes, replies) {
-    if (embed.removed || !Number.isFinite(likes) || !Number.isFinite(replies) || likes < 0 || replies < 0) return false;
-    Object.assign(embed.element.dataset, {
-      likes, replies, countsUpdated: new Date().toISOString(), countsSource: 'live',
-    });
-    return true;
-  }
-
-  async function checkBlueskyPost(embed) {
-    const uri = embed.element.dataset.uri;
-    const params = new URLSearchParams({ uri, depth: '0', parentHeight: '0' });
-    try {
-      const { response, data } = await fetchPostData(`https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread?${params}`);
-      const thread = data?.thread;
-      // A missing entry in getPosts alone is inconclusive. Confirm the root
-      // post, never a missing reply or a blocked-post response.
-      if ((response.status === 400 && data?.error === 'NotFound')
-        || (response.ok && thread?.$type === 'app.bsky.feed.defs#notFoundPost' && thread.uri === uri)) {
-        removePost(embed);
-      } else if (response.ok && thread?.post?.uri === uri) {
-        setAvailability(embed, 'active');
-        updateCounts(embed, thread.post.likeCount, thread.post.replyCount);
-      } else {
-        setAvailability(embed, 'unknown');
-      }
-    } catch {
-      setAvailability(embed, 'unknown');
-    }
-  }
-
-  // Availability checks cover offscreen/deck cards too, independently of lazy
-  // iframe loading. Reuse count lookups where the providers expose both.
-  async function refreshBlueskyCounts() {
-    if (!blueskyEmbeds.length) return;
-    // getPosts accepts at most 25 URIs. Imported collections can grow beyond
-    // that; each failed batch retains its cards and saved sorting counts.
-    const batches = [];
-    for (let i = 0; i < blueskyEmbeds.length; i += 25) batches.push(blueskyEmbeds.slice(i, i + 25));
-    await Promise.allSettled(batches.map(async batch => {
-      try {
-        const params = new URLSearchParams();
-        batch.forEach(embed => params.append('uris', embed.element.dataset.uri));
-        const { response, data } = await fetchPostData(`https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts?${params}`);
-        if (!response.ok || !Array.isArray(data?.posts)) throw new Error('Invalid posts response');
-        const byUri = new Map(data.posts.map(post => [post.uri, post]));
-        await Promise.allSettled(batch.map(async embed => {
-          const post = byUri.get(embed.element.dataset.uri);
-          if (post) {
-            setAvailability(embed, 'active');
-            updateCounts(embed, post.likeCount, post.replyCount);
-          } else {
-            await checkBlueskyPost(embed);
-          }
-        }));
-      } catch {
-        // A failed batch says nothing about any individual post's existence.
-        batch.forEach(embed => setAvailability(embed, 'unknown'));
-      }
-    }));
-    grid.dispatchEvent(new CustomEvent('posts:metrics'));
-  }
-
-  async function refreshMastodonCounts() {
-    if (!mastodonEmbeds.length) return;
-    // Instances can fail independently. Preserve saved values for failed posts
-    // and apply the successful results before re-sorting the board once.
-    await Promise.allSettled(mastodonEmbeds.map(async embed => {
-      setAvailability(embed, 'unknown');
-      const { postUrl, postId } = embed.element.dataset;
-      const url = new URL(`/api/v1/statuses/${postId}`, postUrl);
-      const { response, data: post } = await fetchPostData(url);
-      if (response.status === 404 || response.status === 410) {
-        removePost(embed);
-        return;
-      }
-      if (!response.ok || post?.id !== postId) return;
-      setAvailability(embed, 'active');
-      if (!updateCounts(embed, post.favourites_count, post.replies_count)) return;
-      for (const [metric, value, label] of [
-        ['likes', post.favourites_count, 'likes'],
-        ['replies', post.replies_count, 'comments'],
-        ['reblogs', post.reblogs_count, 'boosts'],
-      ]) {
-        if (!Number.isFinite(value) || value < 0) continue;
-        const count = embed.mount.querySelector(`[data-mastodon-count="${metric}"]`);
-        if (!count) continue;
-        count.textContent = value.toLocaleString();
-        count.closest('a').setAttribute('aria-label', `${value.toLocaleString()} ${label}. Open original Mastodon post`);
-      }
-    }));
-    grid.dispatchEvent(new CustomEvent('posts:metrics'));
-  }
-
-  async function checkOEmbedPosts(posts, endpoint) {
-    await Promise.allSettled(posts.map(async embed => {
-      setAvailability(embed, 'unknown');
-      const permalink = [...embed.fallback.querySelectorAll('a')].at(-1).href;
-      const url = new URL(endpoint);
-      url.searchParams.set('url', permalink.split('?')[0]);
-      url.searchParams.set('omit_script', 'true');
-      const { response, data } = await fetchPostData(url);
-      if (response.status === 404 || response.status === 410) {
-        removePost(embed);
-      } else if (response.ok && typeof data?.html === 'string' && data.html.trim()) {
-        setAvailability(embed, 'active');
-      }
-      // Threads' 400 / Media Not Found also covers legal/privacy restrictions.
-      // Keep that ambiguous case, as well as 401/403/429/5xx and network errors.
-    }));
-  }
-  refreshBlueskyCounts();
-  refreshMastodonCounts();
-  checkOEmbedPosts(xEmbeds, 'https://publish.x.com/oembed');
-  checkOEmbedPosts(threadsEmbeds, 'https://graph.threads.com/oembed');
-  // Threads sorting uses saved public-page counts. Its cross-origin embed
-  // reports height only; live engagement API access requires authentication.
-})();
+  return twitterRequest;
+}
