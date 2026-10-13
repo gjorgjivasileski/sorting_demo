@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0d141d">
+  <meta name="description" content="A little guidance on Archie's Help, Interact, and Shuffle controls.">
+  <title>Help — Archie</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%230d141d'/%3E%3Ctext x='11' y='30' font-family='Georgia' font-size='34' fill='%2391d4ff'%3Ea%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../styles.css?v=help-beacon-20261014">
+  <script type="module" src="../toolbar.js?v=help-20261014"></script>
+  <script type="module" src="help.js?v=help-pulse-20261014"></script>
+</head>
+<body>
+  <a class="skip-link" href="#help-content">Skip to help</a>
+  <header class="toolbar" id="toolbar">
+    <div class="toolbar-inner">
+      <a class="wordmark" href="../index.html" aria-label="Archie home">
+        <span class="brand-mark" aria-hidden="true">a</span>
+        <span>archie<span class="wordmark-dot">.</span></span>
+      </a>
+      <nav class="toolbar-navigation" aria-label="Site navigation">
+        <a class="control-button help-button" href="#help-help" aria-label="Help" aria-current="page" title="Help">
+          <svg class="help-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <path class="help-frame" d="m14 2 10 6v12l-10 6-10-6V8l10-6Z"/>
+            <path class="help-question" d="M10.5 10a3.5 3.5 0 0 1 7 0c0 2.5-3.5 2.5-3.5 5"/>
+            <path class="help-dot" d="m14 18 1.5 1.5L14 21l-1.5-1.5L14 18Z"/>
+          </svg>
+          <span class="control-label">Help</span>
+        </a>
+      </nav>
+      <div class="toolbar-actions">
+        <a class="control-button interaction-button" href="#help-interact" aria-label="About Interact" title="About Interact">
+          <svg class="shield-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <path class="shield-outline" d="m14 3 9 4v8l-4 6-5 4-5-4-4-6V7l9-4Z"/>
+            <path class="shield-core" d="m14 8 4 6-4 6-4-6 4-6Z"/>
+            <path d="M14 5v3m0 12v3M7 14h3m8 0h3"/>
+          </svg>
+          <span class="control-label">Interact</span>
+        </a>
+        <a class="control-button shuffle-button" href="#help-shuffle" aria-label="About Shuffle" title="About Shuffle">
+          <svg class="warp-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <path class="warp-orbit" d="M9 4H4v5m0-5 6 6M19 24h5v-5m0 5-6-6M4 19v5h5m-5 0 6-6M24 9V4h-5m5 0-6 6"/>
+            <path class="warp-crystal" d="m14 5 5 9-5 9-5-9 5-9Z"/>
+            <path d="M14 5v18m-5-9h10" opacity=".5"/>
+          </svg>
+          <span class="control-label">Shuffle</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="help-page" id="help-content" tabindex="-1">
+    <div class="help-heading">
+      <div>
+        <p class="eyebrow"><span aria-hidden="true"></span>Archie / Help</p>
+        <h1>How to use Archie</h1>
+        <p class="description">Three buttons to help you explore.</p>
+      </div>
+      <a class="control-button back-button" href="../index.html" aria-label="Back to posts" title="Back to posts">
+        <svg class="back-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <path d="m12 6-8 8 8 8M4 14h20M24 10v8"/>
+        </svg>
+        <span class="control-label">Back to posts</span>
+      </a>
+    </div>
+
+    <ul class="help-list" aria-label="Feed controls">
+      <li class="help-item" id="help-help">
+        <span class="help-symbol" aria-hidden="true">
+          <svg class="help-icon" viewBox="0 0 28 28" fill="none">
+            <path class="help-frame" d="m14 2 10 6v12l-10 6-10-6V8l10-6Z"/>
+            <path class="help-question" d="M10.5 10a3.5 3.5 0 0 1 7 0c0 2.5-3.5 2.5-3.5 5"/>
+            <path class="help-dot" d="m14 18 1.5 1.5L14 21l-1.5-1.5L14 18Z"/>
+          </svg>
+        </span>
+        <div>
+          <h2>Help</h2>
+          <p>Opens this guide. Use Back to posts or the Archie logo to return to the feed.</p>
+        </div>
+      </li>
+      <li class="help-item" id="help-interact">
+        <span class="help-symbol" aria-hidden="true">
+          <svg class="shield-icon" viewBox="0 0 28 28" fill="none">
+            <path class="shield-outline" d="m14 3 9 4v8l-4 6-5 4-5-4-4-6V7l9-4Z"/>
+            <path class="shield-core" d="m14 8 4 6-4 6-4-6 4-6Z"/>
+            <path d="M14 5v3m0 12v3M7 14h3m8 0h3"/>
+          </svg>
+        </span>
+        <div>
+          <h2>Interact</h2>
+          <p>Turns post interaction on or off. Switch it on to follow links, play videos, and use the controls inside each post.</p>
+          <p>Interaction starts off, so you can grab and drag across cards to scroll on a computer. On mobile, swipe to scroll as usual.</p>
+        </div>
+      </li>
+      <li class="help-item" id="help-shuffle">
+        <span class="help-symbol" aria-hidden="true">
+          <svg class="warp-icon" viewBox="0 0 28 28" fill="none">
+            <path class="warp-orbit" d="M9 4H4v5m0-5 6 6M19 24h5v-5m0 5-6-6M4 19v5h5m-5 0 6-6M24 9V4h-5m5 0-6 6"/>
+            <path class="warp-crystal" d="m14 5 5 9-5 9-5-9 5-9Z"/>
+            <path d="M14 5v18m-5-9h10" opacity=".5"/>
+          </svg>
+        </span>
+        <div>
+          <h2>Shuffle</h2>
+          <p>Fades the cards out with a blue glow, brings in 14 posts, and changes the quote. Unseen posts come first; familiar ones fill any remaining spaces.</p>
+          <p>Once you have seen every post, each shuffle picks a random set without repeating the previous batch. Reloading the feed starts a fresh visit.</p>
+        </div>
+      </li>
+    </ul>
+
+    <footer class="site-footer"><span class="footer-spark" aria-hidden="true">✧</span> A little space for what stays with you.</footer>
+  </main>
+</body>
+</html>

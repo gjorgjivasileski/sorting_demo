@@ -1,5 +1,5 @@
-import { parsePosts, createCard, loadCard } from './embeds.js';
-import { createMasonry } from './layout.js';
+import { parsePosts, createCard, loadCard, disposeCard } from './embeds.js?v=batches-20261013';
+import { createMasonry } from './layout.js?v=batches-20261013';
 import { enableGrabScroll } from './navigation.js';
 
 const feed = document.querySelector('#feed');
@@ -7,52 +7,110 @@ const button = document.querySelector('#shuffle');
 const interactionButton = document.querySelector('#interact');
 const message = document.querySelector('#feed-message');
 const announcement = document.querySelector('#shuffle-status');
-const toolbar = document.querySelector('#toolbar');
+const quoteSection = document.querySelector('#quote');
+const quoteAuthor = document.querySelector('#quote-author');
+const quoteText = document.querySelector('#quote-text');
 const mobile = matchMedia('(max-width: 700px)');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const BATCH_SIZE = 14;
+let allPosts = [];
+let unseenPosts = [];
 let cards = [];
 let shuffling = false;
 let shuffleCount = 0;
 let interactive = false;
+const quotes = [];
+let currentQuote;
 const masonry = createMasonry(feed, () => cards, mobile);
 const stopGrab = enableGrabScroll(document.querySelector('.demo'), target =>
   !mobile.matches && !shuffling && !(interactive && target.closest('.post-card')));
+let cardsByElement = new Map();
+// Observe only the current batch; offscreen cards start loading as they approach.
+const cardObserver = new IntersectionObserver(entries => {
+  for (const entry of entries) {
+    const card = cardsByElement.get(entry.target);
+    if (!entry.isIntersecting || !card) continue;
+    cardObserver.unobserve(entry.target);
+    loadCard(card);
+  }
+}, { rootMargin: '700px 0px' });
+
+function shuffledCopy(posts) {
+  const shuffled = [...posts];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function showNextBatch() {
+  const posts = unseenPosts.splice(0, BATCH_SIZE);
+  if (posts.length < BATCH_SIZE) {
+    // The unseen queue is now empty. Prefer posts outside the current batch.
+    const selectedKeys = new Set(posts.map(post => post.key));
+    // Keep the original list identity even when a federated embed resolves elsewhere.
+    const currentKeys = new Set(cards.map(card => card.element.dataset.post));
+    const seenPosts = shuffledCopy(allPosts.filter(post => !selectedKeys.has(post.key)));
+    const otherPosts = seenPosts.filter(post => !currentKeys.has(post.key));
+    const currentPosts = seenPosts.filter(post => currentKeys.has(post.key));
+    // If fewer than 28 posts exist, repeat only as many as needed to fill the batch.
+    posts.push(...[...otherPosts, ...currentPosts].slice(0, BATCH_SIZE - posts.length));
+  }
+  cardObserver.disconnect();
+  cards.forEach(disposeCard);
+  cards = shuffledCopy(posts).map(createCard);
+  cards.forEach(card => { card.element.querySelector('.card-surface').inert = !interactive; });
+  cardsByElement = new Map(cards.map(card => [card.element, card]));
+  feed.replaceChildren(...cards.map(card => card.element));
+  updatePositions();
+  masonry.observe(cards);
+  cards.forEach(card => cardObserver.observe(card.element));
+}
 
 async function init() {
   try {
     const response = await fetch('./posts.txt', { cache: 'no-store', signal: AbortSignal.timeout(15000) });
     if (!response.ok) throw new Error('posts-unavailable');
     const { posts, skipped } = parsePosts(await response.text());
-    cards = posts.map(createCard);
-    // Mix networks on arrival; subsequent visits can offer a new perspective.
-    for (let i = cards.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [cards[i], cards[j]] = [cards[j], cards[i]];
-    }
-    feed.append(...cards.map(card => card.element));
-    updatePositions();
-    masonry.observe(cards);
-    button.disabled = cards.length < 2;
+    allPosts = posts;
+    unseenPosts = shuffledCopy(allPosts);
+    showNextBatch();
+    button.disabled = allPosts.length < 2;
     interactionButton.disabled = !cards.length;
     if (!cards.length) message.textContent = 'No posts yet. Add post URLs to posts.txt, one per line.';
     else if (skipped) message.textContent = `${skipped} ${skipped === 1 ? 'link couldn’t' : 'links couldn’t'} be recognized. The other posts are below.`;
     else message.hidden = true;
-
-    // Start native widgets near the viewport; do not time out offscreen cards.
-    const byElement = new Map(cards.map(card => [card.element, card]));
-    const observer = new IntersectionObserver(entries => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        observer.unobserve(entry.target);
-        loadCard(byElement.get(entry.target));
-      }
-    }, { rootMargin: '700px 0px' });
-    cards.forEach(card => observer.observe(card.element));
   } catch {
     message.textContent = 'The post list couldn’t load. Check that posts.txt is next to index.html, then reload the page.';
   } finally {
     feed.setAttribute('aria-busy', 'false');
   }
+}
+
+async function initQuotes() {
+  try {
+    const response = await fetch('./quotes.txt', { cache: 'no-store', signal: AbortSignal.timeout(15000) });
+    if (!response.ok) throw new Error('quotes-unavailable');
+    // Each pair of non-empty lines is the quote text followed by its author.
+    const lines = (await response.text()).split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    for (let index = 0; index + 1 < lines.length; index += 2) {
+      quotes.push({ text: lines[index], author: lines[index + 1] });
+    }
+    showRandomQuote();
+  } catch {
+    // Quotes are optional; a missing file must not interrupt the post feed.
+  }
+}
+
+function showRandomQuote() {
+  if (!quotes.length) return;
+  // Avoid showing the same pair twice in a row when there is a choice.
+  const choices = quotes.filter(quote => quote !== currentQuote);
+  currentQuote = choices[Math.floor(Math.random() * choices.length)] || quotes[0];
+  quoteAuthor.textContent = currentQuote.author;
+  quoteText.textContent = currentQuote.text;
+  quoteSection.hidden = false;
 }
 
 function updatePositions() {
@@ -85,7 +143,7 @@ async function fade(hidden) {
 }
 
 button.addEventListener('click', async () => {
-  if (shuffling || cards.length < 2) return;
+  if (shuffling || allPosts.length < 2) return;
   stopGrab();
   shuffling = true;
   // aria-disabled keeps keyboard focus on the same button through the effect.
@@ -97,24 +155,11 @@ button.addEventListener('click', async () => {
   announcement.textContent = 'Shuffling posts…';
   try {
     await fade(true);
-    // A cycle shuffle guarantees every card leaves its previous position.
-    for (let i = cards.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * i);
-      [cards[i], cards[j]] = [cards[j], cards[i]];
-    }
-    cards.forEach((card, index) => {
-      if (typeof feed.moveBefore === 'function') {
-        // Moving without detaching preserves live iframes and media state.
-        feed.moveBefore(card.element, null);
-      }
-      // Keeps the single-column mobile fallback in the same visual order.
-      card.element.style.order = index;
-    });
-    updatePositions();
-    masonry.layout();
+    showRandomQuote();
+    showNextBatch();
     if (!reducedMotion.matches) await pause(50);
     await fade(false);
-    announcement.textContent = `Posts shuffled. New arrangement ${++shuffleCount}.`;
+    announcement.textContent = `Showing ${cards.length} posts. Shuffle ${++shuffleCount}.`;
   } finally {
     feed.classList.remove('is-faded');
     feed.style.removeProperty('min-height');
@@ -126,25 +171,5 @@ button.addEventListener('click', async () => {
   }
 });
 
-let previousScroll = window.scrollY;
-let scrollScheduled = false;
-window.addEventListener('scroll', () => {
-  if (scrollScheduled) return;
-  scrollScheduled = true;
-  requestAnimationFrame(() => {
-    scrollScheduled = false;
-    const current = Math.max(0, window.scrollY);
-    if (mobile.matches && !shuffling) {
-      if (current < 80) toolbar.classList.remove('is-hidden');
-      else if (Math.abs(current - previousScroll) > 5) toolbar.classList.toggle('is-hidden', current > previousScroll);
-    }
-    // Accumulate tiny trackpad movements instead of ignoring slow scrolling.
-    if (Math.abs(current - previousScroll) > 5 || current < 80) previousScroll = current;
-  });
-}, { passive: true });
-mobile.addEventListener('change', () => {
-  toolbar.classList.remove('is-hidden');
-  previousScroll = window.scrollY;
-});
-
+initQuotes();
 init();

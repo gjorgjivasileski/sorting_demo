@@ -80,7 +80,19 @@ export function createCard(post) {
   return { post, element, mount: element.querySelector('.embed-mount'), id: ++nextId, started: false };
 }
 
+export function disposeCard(card) {
+  card.disposed = true;
+  clearTimeout(card.timeout);
+  clearInterval(card.handshake);
+  card.resizeObserver?.disconnect();
+  frameRecords.delete(card);
+  // Removing an iframe stops its media and releases its browsing context.
+  card.mount.replaceChildren();
+  card.element.remove();
+}
+
 function markReady(card) {
+  if (card.disposed) return;
   clearTimeout(card.timeout);
   clearInterval(card.handshake);
   card.element.dataset.state = 'ready';
@@ -89,7 +101,7 @@ function markReady(card) {
 }
 
 function markUnavailable(card) {
-  if (card.element.dataset.state === 'ready') return;
+  if (card.disposed || card.element.dataset.state === 'ready') return;
   clearTimeout(card.timeout);
   clearInterval(card.handshake);
   card.element.dataset.state = 'unavailable';
@@ -97,7 +109,7 @@ function markUnavailable(card) {
 }
 
 export async function loadCard(card) {
-  if (card.started) return;
+  if (card.started || card.disposed) return;
   card.started = true;
   card.element.dataset.state = 'loading';
   card.element.querySelector('.placeholder-message').textContent = 'Loading the original post…';
@@ -108,6 +120,7 @@ export async function loadCard(card) {
       // A Mastodon instance redirects remote embeds instead of rendering them.
       // Resolve the original, including Bluesky posts shared through Bridgy.
       post = await resolveFederatedPost(post);
+      if (card.disposed) return;
       card.post = post;
       const network = NETWORKS[post.network];
       card.element.dataset.network = post.network;
@@ -119,10 +132,15 @@ export async function loadCard(card) {
     }
     if (post.network === 'x') {
       const twitter = await loadTwitter();
+      if (card.disposed) return;
       const iframe = await twitter.widgets.createTweet(post.id, card.mount, {
         theme: 'light', conversation: 'none', dnt: true, align: 'center',
         width: Math.min(550, Math.round(card.mount.getBoundingClientRect().width)),
       });
+      if (card.disposed) {
+        card.mount.replaceChildren();
+        return;
+      }
       if (!iframe) throw new Error('No X embed returned');
       iframe.title = 'X post';
       markReady(card);
@@ -132,6 +150,7 @@ export async function loadCard(card) {
     let src = `${post.url}/embed`;
     if (post.network === 'bluesky') {
       const did = post.handle.startsWith('did:') ? post.handle : await resolveHandle(post.handle);
+      if (card.disposed) return;
       const identity = encodeURIComponent(did).replaceAll('%3A', ':');
       src = `https://embed.bsky.app/embed/${identity}/app.bsky.feed.post/${post.id}?id=${card.id}&colorMode=light`;
     } else if (post.network === 'threads') {
@@ -171,10 +190,12 @@ export async function loadCard(card) {
 }
 
 function requestMastodonHeight(card) {
+  if (card.disposed) return;
   card.frame.contentWindow?.postMessage({ type: 'setHeight', id: card.id }, card.origin);
 }
 
 function scaleThreads(card) {
+  if (card.disposed) return;
   card.mount.style.setProperty('--embed-scale', card.mount.getBoundingClientRect().width / THREADS_WIDTH);
 }
 
