@@ -2,6 +2,7 @@
 export function createMasonry(feed, getCards, mobile) {
   let scheduled = 0;
   let observedWidth = 0;
+  let observedCards = [];
 
   function schedule() {
     if (!scheduled) scheduled = requestAnimationFrame(layout);
@@ -57,6 +58,8 @@ export function createMasonry(feed, getCards, mobile) {
   return {
     layout,
     observe(cards) {
+      observedCards.forEach(card => observer.unobserve(card.element));
+      observedCards = [...cards];
       cards.forEach(card => observer.observe(card.element));
       layout();
     },
