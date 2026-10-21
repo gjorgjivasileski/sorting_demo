@@ -5,8 +5,11 @@ https://x.com/jun_song/status/2111380887036444803
 https://x.com/venturetwins/status/2111507257666265569
 https://x.com/neet_sol/status/2111187540703322482
 https://x.com/duckofprey/status/2111578605062861177
-
+https://x.com/FabrizioRomano/status/2112834288056144037
+https://x.com/ShamsCharania/status/2112972839863329002
+https://x.com/TheHoopCentral/status/2112761777729818629
 https://x.com/neet_sol/status/2111187540703322482
+
 https://mastodon.social/@kplx/117461026378843987
 https://mastodon.social/@bagder/117461111883037623
 https://mastodon.nz/@nickofnz/117454843811764482
@@ -14,6 +17,13 @@ https://mastodon.social/@nixCraft/117452814899739048
 https://mastodon.social/@AbandonedAmerica/117453669319914832
 https://mastodon.social/@jplebreton/117462677195353792
 https://mastodon.social/@Michigander@toad.social/117461946253115731
+https://mastodon.social/@ericafustero/117480290700
+https://mastodon.social/@davidrevoy@framapiaf.org/117479713781832616
+https://mastodon.social/@archlinux@fosstodon.org/117479544749211754
+https://mastodon.social/@pita@mastodon.gamedev.place/117471902598044501
+https://mastodon.social/@csilverman/117480409181212678
+https://mastodon.social/@raptor@infosec.exchange/117480319535163933
+https://mastodon.social/@veronica@explains.social/117479688360192657
 
 https://bsky.app/profile/nedpyle.com/post/3my5yfqdwd22h
 https://bsky.app/profile/twonks.bsky.social/post/3my3cgb3fwk22
@@ -23,6 +33,10 @@ https://bsky.app/profile/aparker.io/post/3mxyjcdwpuk2s
 https://bsky.app/profile/brittanyellich.com/post/3my4ksyooqc2y
 https://bsky.app/profile/brittanyellich.com/post/3mxtu7dtkes2g
 
+https://bsky.app/profile/twonks.bsky.social/post/3myfcbemvb225
+https://bsky.app/profile/beetlemoses.bsky.social/post/3mydhqwaenc2o
+https://bsky.app/profile/kenney.nl/post/3my7q27m4gk26
+
 https://www.threads.com/@kridoarts/post/DeoHVLhDb1Q
 https://www.threads.com/@lacabezaenlasnubes/post/Deoi0V7ACW2
 https://www.threads.com/@in.myworld.es/post/Dem7cwwlZLs
@@ -30,3 +44,7 @@ https://www.threads.com/@imagen_luca/post/DenqxSrD7Rz
 https://www.threads.com/@ty_hough/post/Dek31Xcjb-s
 https://www.threads.com/@slesha.thapa/post/DemgfmxGrS-?hl=en
 https://www.threads.com/@t1oui_17/post/Den4DQcGxBR
+https://www.threads.com/@nytimes/post/DexAQP1Gmps?hl=en
+https://www.threads.com/@astonvilla/post/DexaFEvEg5R?hl=en
+https://www.threads.com/@tennischannel/post/DewogxPH0OG
+https://www.threads.com/@wimbledon/post/DeSEZJ0H3Cs
