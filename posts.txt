@@ -18,6 +18,9 @@ https://mastodon.social/@jplebreton/117462677195353792
 https://mastodon.social/@Michigander@toad.social/117461946253115731
 https://mastodon.social/@GossiTheDog@cyberplace.social/117472766069610420
 https://fosstodon.org/@php/117474977977509509
+https://mastodon.social/@catsalad@infosec.exchange/117476890966248590
+https://mastodon.social/@MostlyHarmless@thecanadian.social/117477088958042008
+https://mastodon.social/@glennf@zeppelin.flights/117476205020443145
 
 https://bsky.app/profile/nedpyle.com/post/3my5yfqdwd22h
 https://bsky.app/profile/twonks.bsky.social/post/3my3cgb3fwk22
@@ -28,6 +31,9 @@ https://bsky.app/profile/brittanyellich.com/post/3my4ksyooqc2y
 https://bsky.app/profile/brittanyellich.com/post/3mxtu7dtkes2g
 https://bsky.app/profile/rincewind.run/post/3myajndivrs2a
 https://bsky.app/profile/apnews.com/post/3myd7nruqph2w
+https://bsky.app/profile/jimbenton.bsky.social/post/3myclabbhus2y
+https://bsky.app/profile/filippo.abyssdomain.expert/post/3myctyyiwwk2v
+https://bsky.app/profile/astrra.space/post/3myec33sj3k2d
 
 https://www.threads.com/@kridoarts/post/DeoHVLhDb1Q
 https://www.threads.com/@lacabezaenlasnubes/post/Deoi0V7ACW2
@@ -40,3 +46,5 @@ https://www.threads.com/@europeanspaceagency/post/Deoa4IsE-pz
 https://www.threads.com/@quantamag/post/Der-gYEndP-?hl=en
 https://www.threads.com/@ogswiftie18/post/DesPStIEYyF
 https://www.threads.com/@yas_draw96/post/DervrNfjCJw
+https://www.threads.com/@annav__e/post/DWvlzuijYTQ
+https://www.threads.com/@civort.art/post/Detc8mViUfQ
