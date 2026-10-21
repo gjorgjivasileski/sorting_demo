@@ -7,8 +7,8 @@ https://x.com/neet_sol/status/2111187540703322482
 https://x.com/duckofprey/status/2111578605062861177
 https://x.com/Cristina_AC_X/status/2112303024135623028
 https://x.com/ChShersh/status/2112390251973169460
-
 https://x.com/neet_sol/status/2111187540703322482
+
 https://mastodon.social/@kplx/117461026378843987
 https://mastodon.social/@bagder/117461111883037623
 https://mastodon.nz/@nickofnz/117454843811764482
@@ -17,6 +17,7 @@ https://mastodon.social/@AbandonedAmerica/117453669319914832
 https://mastodon.social/@jplebreton/117462677195353792
 https://mastodon.social/@Michigander@toad.social/117461946253115731
 https://mastodon.social/@GossiTheDog@cyberplace.social/117472766069610420
+https://fosstodon.org/@php/117474977977509509
 
 https://bsky.app/profile/nedpyle.com/post/3my5yfqdwd22h
 https://bsky.app/profile/twonks.bsky.social/post/3my3cgb3fwk22
