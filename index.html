@@ -72,19 +72,7 @@
     <ul class="card-stage" id="feed" role="list" data-interactive="false" aria-label="Posts from across your networks" aria-describedby="interaction-hint" aria-busy="true" tabindex="-1"></ul>
     <p class="sr-only" id="shuffle-status" role="status" aria-live="polite"></p>
     <noscript><p class="feed-message">Enable JavaScript to load the embedded posts.</p></noscript>
-
-<<<<<<< HEAD
     <footer class="site-footer"><span class="footer-spark" aria-hidden="true">✧</span> Author: <a rel="me noopener noreferrer" target="_blank" href="https://mastodon.social/@gjorgji_vasileski">Gjorgji Vasileski🦣</a></footer>
-=======
-    <footer class="site-footer"><span class="footer-spark" aria-hidden="true">✧</span> Author: <a rel="me" href="https://mastodon.social/@gjorgji_vasileski">Gjorgji Vasileski🦣</a></footer>
->>>>>>> origin/master
   </main>
-  <script>
-    // Browsers block ES modules and data fetching when opened directly.
-    if (location.protocol === 'file:') {
-      document.querySelector('#feed-message').textContent = 'To load posts.json, run python3 -m http.server 8000 in this folder, then open http://localhost:8000.';
-      document.querySelector('#feed').setAttribute('aria-busy', 'false');
-    }
-  </script>
 </body>
 </html>
