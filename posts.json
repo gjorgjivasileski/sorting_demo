@@ -1,0 +1,419 @@
+{
+  "posts": [
+    {
+      "SN": "X",
+      "postURL": "https://x.com/benpham3206/status/2111646317537804418",
+      "category": "Satire"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/cqcqcqdx/status/2111618536212939023",
+      "category": "IT"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/pegobry_en/status/2111584272024825903",
+      "category": "Politics"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/jun_song/status/2111380887036444803",
+      "category": "IT"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/venturetwins/status/2111507257666265569",
+      "category": "Satire"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/neet_sol/status/2111187540703322482",
+      "category": "Satire"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/duckofprey/status/2111578605062861177",
+      "category": "Sport"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/FabrizioRomano/status/2112834288056144037",
+      "category": "Sport"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/ShamsCharania/status/2112972839863329002",
+      "category": "Sport"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/TheHoopCentral/status/2112761777729818629",
+      "category": "Sport"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/Cristina_AC_X/status/2112303024135623028",
+      "category": "IT"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/ChShersh/status/2112390251973169460",
+      "category": "IT"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/FabrizioRomano/status/2112463046761435588",
+      "category": "Sport"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/thecasualultra/status/2112632783621214366",
+      "category": "Satire"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/Cristiano/status/2112643901831950670",
+      "category": "Sport"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@kplx/117461026378843987",
+      "category": "Art"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@bagder/117461111883037623",
+      "category": "IT"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.nz/@nickofnz/117454843811764482",
+      "category": "Satire"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@nixCraft/117452814899739048",
+      "category": "IT"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@AbandonedAmerica/117453669319914832",
+      "category": "Art"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@jplebreton/117462677195353792",
+      "category": "Politics"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@Michigander@toad.social/117461946253115731",
+      "category": "Art"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@ericafustero/117480290700579238",
+      "category": "Art"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@davidrevoy@framapiaf.org/117479713781832616",
+      "category": "Art"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@archlinux@fosstodon.org/117479544749211754",
+      "category": "IT"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@pita@mastodon.gamedev.place/117471902598044501",
+      "category": "Art"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@csilverman/117480409181212678",
+      "category": "IT"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@raptor@infosec.exchange/117480319535163933",
+      "category": "IT"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@GossiTheDog@cyberplace.social/117472766069610420",
+      "category": "IT"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@catsalad@infosec.exchange/117476890966248590",
+      "category": "Satire"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@MostlyHarmless@thecanadian.social/117477088958042008",
+      "category": "Satire"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@glennf@zeppelin.flights/117476205020443145",
+      "category": "IT"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/nedpyle.com/post/3my5yfqdwd22h",
+      "category": "Art"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/beetlemoses.bsky.social/post/3my3hcda4rc2s",
+      "category": "Art"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/apenwarr.ca/post/3mxyprppd7k2y",
+      "category": "IT"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/aparker.io/post/3mxyjcdwpuk2s",
+      "category": "Satire"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/brittanyellich.com/post/3my4ksyooqc2y",
+      "category": "Satire"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/brittanyellich.com/post/3mxtu7dtkes2g",
+      "category": "IT"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/rincewind.run/post/3myajndivrs2a",
+      "category": "Politics"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/apnews.com/post/3myd7nruqph2w",
+      "category": "Space"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/jimbenton.bsky.social/post/3myclabbhus2y",
+      "category": "Art"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/filippo.abyssdomain.expert/post/3myctyyiwwk2v",
+      "category": "IT"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/astrra.space/post/3myec33sj3k2d",
+      "category": "IT"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/twonks.bsky.social/post/3myfcbemvb225",
+      "category": "Art"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/beetlemoses.bsky.social/post/3mydhqwaenc2o",
+      "category": "Art"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/kenney.nl/post/3my7q27m4gk26",
+      "category": "IT"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@kridoarts/post/DeoHVLhDb1Q",
+      "category": "Art"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@lacabezaenlasnubes/post/Deoi0V7ACW2",
+      "category": "Art"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@in.myworld.es/post/Dem7cwwlZLs",
+      "category": "Art"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@imagen_luca/post/DenqxSrD7Rz",
+      "category": "Art"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@ty_hough/post/Dek31Xcjb-s",
+      "category": "IT"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@slesha.thapa/post/DemgfmxGrS-?hl=en",
+      "category": "Satire"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@t1oui_17/post/Den4DQcGxBR",
+      "category": "Sport"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@nytimes/post/DexAQP1Gmps?hl=en",
+      "category": "IT"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@astonvilla/post/DexaFEvEg5R?hl=en",
+      "category": "Sport"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@tennischannel/post/DewogxPH0OG",
+      "category": "Sport"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@wimbledon/post/DeSEZJ0H3Cs",
+      "category": "Sport"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@europeanspaceagency/post/Deoa4IsE-pz",
+      "category": "Space"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@quantamag/post/Der-gYEndP-?hl=en",
+      "category": "Art"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@ogswiftie18/post/DesPStIEYyF",
+      "category": "Satire"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@yas_draw96/post/DervrNfjCJw",
+      "category": "Satire"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@annav__e/post/DWvlzuijYTQ",
+      "category": "Art"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@civort.art/post/Detc8mViUfQ",
+      "category": "Art"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@nasa/post/Decc8jiFYaY",
+      "category": "Space"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/dinowilliam/status/2113614005168197671",
+      "category": "IT"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/chardidathing/status/2113392326387331333",
+      "category": "IT"
+    },
+    {
+      "SN": "X",
+      "postURL": "https://x.com/afcbournemouth/status/2113373679593853377",
+      "category": "Sport"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@bleuje@mathstodon.xyz/117265818939861116",
+      "category": "Art"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://fosstodon.org/@php/117474977977509509",
+      "category": "IT"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@jn3008/117484501828080215",
+      "category": "Art"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@bagder/117490916881166034",
+      "category": "IT"
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@donni/117488018537934581",
+      "category": ""
+    },
+    {
+      "SN": "Mastodon",
+      "postURL": "https://mastodon.social/@bleuje@mathstodon.xyz/117342944658731112",
+      "category": "Art"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/twonks.bsky.social/post/3my3cgb3fwk22",
+      "category": "Art"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/bradmossesq.bsky.social/post/3myil4mzgns2z",
+      "category": "Politics"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/markhamillofficial.bsky.social/post/3mw2eiwvvvc2t",
+      "category": "Politics"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@drcarolineleaf/post/De18A74DNso",
+      "category": "Satire"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@whatsapp/post/De2OzhQnYUy",
+      "category": "Satire"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@europeanspaceagency/post/De2C5uwARoS",
+      "category": "Space"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@wongmjane/post/Deslas_iYOv",
+      "category": "Satire"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@nypost/post/De2Q9UeGo3J",
+      "category": "Satire"
+    },
+    {
+      "SN": "Threads",
+      "postURL": "https://www.threads.com/@aprilajoy/post/De5RIbulCvi",
+      "category": "Satire"
+    },
+    {
+      "SN": "Bluesky",
+      "postURL": "https://bsky.app/profile/pippy.bsky.social/post/3myn4zw3ro22p",
+      "category": "Satire"
+    }
+  ]
+}

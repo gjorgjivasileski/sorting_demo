@@ -14,17 +14,22 @@ const THREADS_WIDTH = 384;
 let twitterRequest;
 let nextId = 0;
 
-export function parsePosts(text) {
+export function parsePosts(data) {
+  if (!data || !Array.isArray(data.posts)) throw new TypeError('Expected a posts collection');
   const posts = new Map();
   let skipped = 0;
   let duplicates = 0;
-  for (const line of text.split(/\r?\n/)) {
-    const value = line.trim();
-    if (!value || value.startsWith('#')) continue;
-    const post = parsePost(value);
-    if (!post) skipped++;
+  for (const entry of data.posts) {
+    if (!entry || typeof entry.SN !== 'string' || typeof entry.postURL !== 'string'
+      || typeof entry.category !== 'string') {
+      skipped++;
+      continue;
+    }
+    const post = parsePost(entry.postURL.trim());
+    // The declared network must match the URL used for the native embed.
+    if (!post || entry.SN.trim().toLowerCase() !== post.network) skipped++;
     else if (posts.has(post.key)) duplicates++;
-    else posts.set(post.key, post);
+    else posts.set(post.key, { ...post, category: entry.category.trim() });
   }
   return { posts: [...posts.values()], skipped, duplicates };
 }
@@ -53,7 +58,7 @@ function parsePost(value) {
       || (match = url.pathname.match(/^\/users\/[^/]+\/statuses\/(\d+)$/))) {
       return { network: 'mastodon', id: match[1], key: `mastodon:${host}/${match[1]}`, url: url.href };
     }
-  } catch { /* An invalid line should not stop the rest of the feed. */ }
+  } catch { /* An invalid URL should not stop the rest of the feed. */ }
   return null;
 }
 
@@ -244,7 +249,7 @@ async function resolveFederatedPost(post) {
   }
   const original = parsePost(source.href);
   if (!original) throw new Error('No supported native embed for this source');
-  return original;
+  return { ...original, category: post.category };
 }
 
 function loadTwitter() {

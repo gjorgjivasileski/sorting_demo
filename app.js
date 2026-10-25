@@ -1,6 +1,7 @@
-import { parsePosts, createCard, loadCard, disposeCard } from './embeds.js?v=batches-20261013';
+import { parsePosts, createCard, loadCard, disposeCard } from './embeds.js?v=posts-json-20261022';
 import { createMasonry } from './layout.js?v=batches-20261013';
 import { enableGrabScroll } from './navigation.js';
+import { FILTER_STORAGE_KEY, readFilters, filterPosts } from './filters.js?v=controls-20261025';
 
 const feed = document.querySelector('#feed');
 const button = document.querySelector('#shuffle');
@@ -14,6 +15,10 @@ const mobile = matchMedia('(max-width: 700px)');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const BATCH_SIZE = 14;
 let allPosts = [];
+let sourcePosts = [];
+let postsLoaded = false;
+let skippedPosts = 0;
+let activeFilters = '';
 let unseenPosts = [];
 let cards = [];
 let shuffling = false;
@@ -68,21 +73,49 @@ function showNextBatch() {
   cards.forEach(card => cardObserver.observe(card.element));
 }
 
+function refreshFilters() {
+  if (!postsLoaded || shuffling) return;
+  const filters = readFilters();
+  const signature = JSON.stringify(filters);
+  if (signature === activeFilters) return;
+  activeFilters = signature;
+  allPosts = filterPosts(sourcePosts, filters);
+  unseenPosts = shuffledCopy(allPosts);
+  showNextBatch();
+  button.disabled = allPosts.length < 2;
+  interactionButton.disabled = !cards.length;
+  message.hidden = false;
+  if (!sourcePosts.length) {
+    message.textContent = 'No posts yet. Add posts to the posts collection in posts.json.';
+  } else if (!cards.length) {
+    const link = document.createElement('a');
+    link.href = 'Sites/ControlPanel.html';
+    link.textContent = 'Adjust filters';
+    message.replaceChildren('No posts match your filters. ', link);
+  } else if (skippedPosts) {
+    message.textContent = `${skippedPosts} ${skippedPosts === 1 ? 'link couldn’t' : 'links couldn’t'} be recognized. The other posts are below.`;
+  } else {
+    message.hidden = true;
+  }
+}
+
+// Restore the selection even when Back returns a cached feed, or another tab changes it.
+window.addEventListener('pageshow', refreshFilters);
+window.addEventListener('storage', event => {
+  if (event.key === null || event.key === FILTER_STORAGE_KEY) refreshFilters();
+});
+
 async function init() {
   try {
-    const response = await fetch('./posts.txt', { cache: 'no-store', signal: AbortSignal.timeout(15000) });
+    const response = await fetch('./posts.json', { cache: 'no-store', signal: AbortSignal.timeout(15000) });
     if (!response.ok) throw new Error('posts-unavailable');
-    const { posts, skipped } = parsePosts(await response.text());
-    allPosts = posts;
-    unseenPosts = shuffledCopy(allPosts);
-    showNextBatch();
-    button.disabled = allPosts.length < 2;
-    interactionButton.disabled = !cards.length;
-    if (!cards.length) message.textContent = 'No posts yet. Add post URLs to posts.txt, one per line.';
-    else if (skipped) message.textContent = `${skipped} ${skipped === 1 ? 'link couldn’t' : 'links couldn’t'} be recognized. The other posts are below.`;
-    else message.hidden = true;
+    const { posts, skipped } = parsePosts(await response.json());
+    sourcePosts = posts;
+    skippedPosts = skipped;
+    postsLoaded = true;
+    refreshFilters();
   } catch {
-    message.textContent = 'The post list couldn’t load. Check that posts.txt is next to index.html, then reload the page.';
+    message.textContent = 'The post list couldn’t load. Check that posts.json is next to index.html and contains valid post data, then reload the page.';
   } finally {
     feed.setAttribute('aria-busy', 'false');
   }
@@ -168,6 +201,7 @@ button.addEventListener('click', async () => {
     button.removeAttribute('aria-disabled');
     interactionButton.removeAttribute('aria-disabled');
     shuffling = false;
+    refreshFilters();
   }
 });
 
