@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0d141d">
+  <meta name="description" content="Choose the categories and social networks in your Archie feed.">
+  <title>Control Panel — Archie</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%230d141d'/%3E%3Ctext x='11' y='30' font-family='Georgia' font-size='34' fill='%2391d4ff'%3Ea%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../styles.css?v=category-selection-20261025">
+  <script type="module" src="../toolbar.js?v=toolbar-polish-20261025"></script>
+  <script type="module" src="control-panel.js?v=category-selection-20261025"></script>
+</head>
+<body>
+  <a class="skip-link" href="#filters">Skip to filters</a>
+  <header class="toolbar" id="toolbar">
+    <div class="toolbar-inner">
+      <a class="wordmark" href="../index.html" aria-label="Archie home">
+        <span class="brand-mark" aria-hidden="true">a</span>
+        <span>archie<span class="wordmark-dot">.</span></span>
+      </a>
+      <nav class="toolbar-navigation" aria-label="Site navigation">
+        <a class="control-button control-panel-button" href="#filters" aria-label="Control Panel" aria-current="page" title="Control Panel">
+          <svg class="tools-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <g class="tool-hammer"><path d="M3 4h7l3 3-2 2-3-2H3V4ZM6 7v16h3V8"/></g>
+            <g class="tool-wrench"><path d="M18 4v5h4V4a5 5 0 0 1 0 9v9a2 2 0 0 1-4 0v-9a5 5 0 0 1 0-9Z"/></g>
+          </svg>
+          <span class="control-label">Control Panel</span>
+        </a>
+        <a class="control-button help-button" href="help.html" aria-label="Help" title="Help">
+          <svg class="help-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <path class="help-frame" d="m14 2 10 6v12l-10 6-10-6V8l10-6Z"/>
+            <path class="help-question" d="M10.5 10a3.5 3.5 0 0 1 7 0c0 2.5-3.5 2.5-3.5 5"/>
+            <path class="help-dot" d="m14 18 1.5 1.5L14 21l-1.5-1.5L14 18Z"/>
+          </svg>
+          <span class="control-label">Help</span>
+        </a>
+      </nav>
+      <div class="toolbar-actions">
+        <a class="control-button back-button" href="../index.html" aria-label="Back to posts" title="Back to posts">
+          <svg class="back-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="m12 6-8 8 8 8M4 14h20M24 10v8"/></svg>
+          <span class="control-label">Back to posts</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="help-page control-panel" id="filters" tabindex="-1">
+    <div class="help-heading">
+      <div>
+        <p class="eyebrow"><span aria-hidden="true"></span>Archie / Your feed</p>
+        <h1>Control Panel</h1>
+        <p class="description">Choose your categories and social networks. A post must match one selection from each group.</p>
+      </div>
+    </div>
+
+    <section class="filter-panel" aria-labelledby="filter-heading">
+      <h2 id="filter-heading">Filters</h2>
+      <p class="filter-intro">Glowing buttons are on. Changes are saved automatically.</p>
+      <fieldset class="filter-group" aria-labelledby="category-label">
+        <legend>
+          <span class="filter-legend-content">
+            <span id="category-label">Category</span>
+            <span class="filter-shortcuts">
+              <button class="filter-shortcut" type="button" data-category-selection="all" aria-label="Select all categories" aria-controls="category-options" disabled>All</button>
+              <button class="filter-shortcut" type="button" data-category-selection="none" aria-label="Deselect all categories" aria-controls="category-options" disabled>None</button>
+            </span>
+          </span>
+        </legend>
+        <div class="filter-options" id="category-options">
+          <button class="control-button filter-button" type="button" data-filter-group="categories" data-value="Satire" aria-label="Satire" title="Satire" aria-pressed="true" disabled>
+            <svg class="filter-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><use href="../filter-icons.svg#satire"/></svg>
+            <span class="control-label">Satire</span>
+          </button>
+          <button class="control-button filter-button" type="button" data-filter-group="categories" data-value="IT" aria-label="IT" title="IT" aria-pressed="true" disabled>
+            <svg class="filter-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><use href="../filter-icons.svg#it"/></svg>
+            <span class="control-label">IT</span>
+          </button>
+          <button class="control-button filter-button" type="button" data-filter-group="categories" data-value="Politics" aria-label="Politics" title="Politics" aria-pressed="true" disabled>
+            <svg class="filter-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><use href="../filter-icons.svg#politics"/></svg>
+            <span class="control-label">Politics</span>
+          </button>
+          <button class="control-button filter-button" type="button" data-filter-group="categories" data-value="Sport" aria-label="Sport" title="Sport" aria-pressed="true" disabled>
+            <svg class="filter-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><use href="../filter-icons.svg#sport"/></svg>
+            <span class="control-label">Sport</span>
+          </button>
+          <button class="control-button filter-button" type="button" data-filter-group="categories" data-value="Art" aria-label="Art" title="Art" aria-pressed="true" disabled>
+            <svg class="filter-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><use href="../filter-icons.svg#art"/></svg>
+            <span class="control-label">Art</span>
+          </button>
+          <button class="control-button filter-button" type="button" data-filter-group="categories" data-value="Space" aria-label="Space" title="Space" aria-pressed="true" disabled>
+            <svg class="filter-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><use href="../filter-icons.svg#space"/></svg>
+            <span class="control-label">Space</span>
+          </button>
+          <button class="control-button filter-button" type="button" data-filter-group="categories" data-value="" aria-label="Uncategorized" title="Uncategorized" aria-pressed="true" disabled>
+            <svg class="filter-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><use href="../filter-icons.svg#uncategorized"/></svg>
+            <span class="control-label">Uncategorized</span>
+          </button>
+        </div>
+      </fieldset>
+      <fieldset class="filter-group">
+        <legend>Social network</legend>
+        <div class="filter-options">
+          <button class="control-button filter-button" type="button" data-filter-group="networks" data-value="x" aria-label="X" title="X" aria-pressed="true" disabled>
+            <svg class="filter-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><use href="../filter-icons.svg#x"/></svg>
+            <span class="control-label">X</span>
+          </button>
+          <button class="control-button filter-button" type="button" data-filter-group="networks" data-value="mastodon" aria-label="Mastodon" title="Mastodon" aria-pressed="true" disabled>
+            <svg class="filter-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><use href="../filter-icons.svg#mastodon"/></svg>
+            <span class="control-label">Mastodon</span>
+          </button>
+          <button class="control-button filter-button" type="button" data-filter-group="networks" data-value="bluesky" aria-label="Bluesky" title="Bluesky" aria-pressed="true" disabled>
+            <svg class="filter-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><use href="../filter-icons.svg#bluesky"/></svg>
+            <span class="control-label">Bluesky</span>
+          </button>
+          <button class="control-button filter-button" type="button" data-filter-group="networks" data-value="threads" aria-label="Threads" title="Threads" aria-pressed="true" disabled>
+            <svg class="filter-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true"><use href="../filter-icons.svg#threads"/></svg>
+            <span class="control-label">Threads</span>
+          </button>
+        </div>
+      </fieldset>
+      <p class="filter-status" id="filter-status" role="status" aria-live="polite">Loading your selections…</p>
+      <noscript><p class="filter-status">Enable JavaScript to change and save your filters.</p></noscript>
+    </section>
+
+    <footer class="site-footer"><span class="footer-spark" aria-hidden="true">✧</span> Author: <a rel="me noopener noreferrer" target="_blank" href="https://mastodon.social/@gjorgji_vasileski">Gjorgji Vasileski🦣</a></footer>
+  </main>
+</body>
+</html>

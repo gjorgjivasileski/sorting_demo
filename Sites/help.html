@@ -8,8 +8,8 @@
   <meta name="description" content="A little guidance on Archie's Help, Interact, and Shuffle controls.">
   <title>Help — Archie</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%230d141d'/%3E%3Ctext x='11' y='30' font-family='Georgia' font-size='34' fill='%2391d4ff'%3Ea%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="../styles.css?v=help-beacon-20261014">
-  <script type="module" src="../toolbar.js?v=help-20261014"></script>
+  <link rel="stylesheet" href="../styles.css?v=toolbar-polish-20261025">
+  <script type="module" src="../toolbar.js?v=toolbar-polish-20261025"></script>
   <script type="module" src="help.js?v=help-pulse-20261014"></script>
 </head>
 <body>
@@ -21,6 +21,13 @@
         <span>archie<span class="wordmark-dot">.</span></span>
       </a>
       <nav class="toolbar-navigation" aria-label="Site navigation">
+        <a class="control-button control-panel-button" href="ControlPanel.html" aria-label="Control Panel" title="Control Panel">
+          <svg class="tools-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <g class="tool-hammer"><path d="M3 4h7l3 3-2 2-3-2H3V4ZM6 7v16h3V8"/></g>
+            <g class="tool-wrench"><path d="M18 4v5h4V4a5 5 0 0 1 0 9v9a2 2 0 0 1-4 0v-9a5 5 0 0 1 0-9Z"/></g>
+          </svg>
+          <span class="control-label">Control Panel</span>
+        </a>
         <a class="control-button help-button" href="#help-help" aria-label="Help" aria-current="page" title="Help">
           <svg class="help-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true">
             <path class="help-frame" d="m14 2 10 6v12l-10 6-10-6V8l10-6Z"/>
@@ -56,7 +63,7 @@
       <div>
         <p class="eyebrow"><span aria-hidden="true"></span>Archie / Help</p>
         <h1>How to use Archie</h1>
-        <p class="description">Three buttons to help you explore.</p>
+        <p class="description">A guide to your feed controls.</p>
       </div>
       <a class="control-button back-button" href="../index.html" aria-label="Back to posts" title="Back to posts">
         <svg class="back-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true">
@@ -78,7 +85,6 @@
         <div>
           <h2>Help</h2>
           <p>Opens this guide. Use Back to posts or the Archie logo to return to the feed.</p>
-          <p>Please note that Archie is still under 🏗</p>
         </div>
       </li>
       <li class="help-item" id="help-interact">
@@ -92,7 +98,7 @@
         <div>
           <h2>Interact</h2>
           <p>Turns post interaction on or off. Switch it on to follow links, play videos, and use the controls inside each post.</p>
-          <p>Switching the button off lets you grab and scroll, you can skroll as normal on mobile.</p>
+          <p>Interaction starts off, so you can grab and drag across cards to scroll on a computer. On mobile, swipe to scroll as usual.</p>
         </div>
       </li>
       <li class="help-item" id="help-shuffle">
@@ -105,13 +111,13 @@
         </span>
         <div>
           <h2>Shuffle</h2>
-          <p>Shuffles the posts, on each shuffle you get a new batch, until the posts pool is exhausted.</p>
-          <p>Once the pool is exhausted you get random posts. Reloading the page restarts this process</p>
+          <p>Fades the cards out with a blue glow, brings in up to 14 posts matching your filters, and changes the quote. Unseen posts come first; familiar ones fill any remaining spaces.</p>
+          <p>Once you have seen every matching post, each shuffle avoids the previous batch when enough other posts are available. Reloading the feed starts a fresh visit and keeps your filters.</p>
         </div>
       </li>
     </ul>
 
-    <footer class="site-footer"><span class="footer-spark" aria-hidden="true">✧</span> A little space for what stays with you.</footer>
+    <footer class="site-footer"><span class="footer-spark" aria-hidden="true">✧</span> Author: <a rel="me noopener noreferrer" target="_blank" href="https://mastodon.social/@gjorgji_vasileski">Gjorgji Vasileski🦣</a></footer>
   </main>
 </body>
 </html>

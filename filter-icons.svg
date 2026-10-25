@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+  <symbol id="satire" viewBox="0 0 28 28">
+    <path d="m3 6 10-2v7c0 4-3 6-5 7-4-2-6-6-5-12Z"/>
+    <path d="m5 9 2-1m3 0 2 1M6 12c1 2 3 2 4 0M16 8l9 2v7c-1 4-4 6-7 7-3-2-5-5-5-9"/>
+    <path d="m16 12 2 1m3 0 2-1m-7 7c1-2 4-2 5 0"/>
+  </symbol>
+  <symbol id="it" viewBox="0 0 28 28">
+    <rect x="3" y="4" width="22" height="15" rx="2"/>
+    <path d="M3 15h22M11 19l-1 5m7-5 1 5M7 24h14M8 8l2 2-2 2m5 0h5"/>
+  </symbol>
+  <symbol id="politics" viewBox="0 0 28 28">
+    <path d="m14 3 11 6H3l11-6ZM5 12v9m6-9v9m6-9v9m6-9v9M3 22h22M2 25h24"/>
+    <circle cx="14" cy="7" r=".7"/>
+  </symbol>
+  <symbol id="sport" viewBox="0 0 28 28">
+    <circle cx="17" cy="4" r="2"/>
+    <path d="m14 8-5 6 7 2-5 6m3-14 5 4 4-1M9 14l-4 5m15-8 4 12M3 22l18 3c2 0 3-1 4-2M6 6l3 18"/>
+  </symbol>
+  <symbol id="art" viewBox="0 0 28 28">
+    <path d="M14 3C7 3 3 8 3 14s5 11 11 11c3 0 4-2 2-4-2-3 0-5 3-4 4 1 6-1 6-4C25 7 20 3 14 3Z"/>
+    <circle cx="9" cy="9" r="1.5"/><circle cx="16" cy="7" r="1.5"/>
+    <circle cx="21" cy="12" r="1.5"/><circle cx="7" cy="16" r="1.5"/>
+  </symbol>
+  <symbol id="space" viewBox="0 0 28 28">
+    <path d="m11 9 8 8-6 6-8-8 6-6Zm-3 3L3 7l4-4 5 5m4 12 5 5 4-4-5-5M4 6l5 5m8 10 5-5M15 13l5-5m-2-4c4 0 6 2 6 6m-6-3c2 0 3 1 3 3"/>
+    <circle cx="14" cy="14" r="1"/>
+  </symbol>
+  <symbol id="uncategorized" viewBox="0 0 28 28">
+    <path d="M4 4h10l10 10-10 10L4 14V4Z"/>
+    <circle cx="9" cy="9" r="1.5"/><path d="M13 15h5"/>
+  </symbol>
+  <symbol id="x" viewBox="0 0 28 28">
+    <path d="M5 4h5l13 20h-5L5 4ZM22 4l-8 10M6 24l8-10"/>
+  </symbol>
+  <symbol id="mastodon" viewBox="0 0 28 28">
+    <path d="M4 19V12c0-5 3-8 8-8 4 0 6 2 7 5 4-1 6 2 6 5v6c0 3-4 3-4 0v-4M4 16l-2 2m3 0v6h4v-5h6v5h4V13"/>
+    <path d="M16 10c-4-2-6 1-5 4 1 2 3 3 5 1m4 1c-1 4-5 5-6 2"/>
+    <circle cx="22" cy="12" r=".6"/>
+  </symbol>
+  <symbol id="bluesky" viewBox="0 0 28 28">
+    <path d="M14 13C10 6 3 1 3 8c0 5 3 7 8 8-8 0-7 7-3 7 3 0 5-4 6-7m0-3c4-7 11-12 11-5 0 5-3 7-8 8 8 0 7 7 3 7-3 0-5-4-6-7M14 11v8m-1-8-2-3m4 3 2-3"/>
+  </symbol>
+  <symbol id="threads" viewBox="0 0 28 28">
+    <ellipse cx="12" cy="5" rx="8" ry="2"/>
+    <path d="M4 5v18c0 3 16 3 16 0V5M4 23c0-3 16-3 16 0M6 9l12 3M6 13l12 3M6 17l12 3m2-5c6-5 8 7 3 6"/>
+  </symbol>
+</svg>

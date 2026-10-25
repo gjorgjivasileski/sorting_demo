@@ -8,9 +8,9 @@
   <meta name="description" content="A little space for posts worth keeping. A different perspective with every shuffle.">
   <title>Archie — A different perspective</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%230d141d'/%3E%3Ctext x='11' y='30' font-family='Georgia' font-size='34' fill='%2391d4ff'%3Ea%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=help-beacon-20261014">
-  <script type="module" src="toolbar.js?v=help-20261014"></script>
-  <script type="module" src="app.js?v=help-20261014"></script>
+  <link rel="stylesheet" href="styles.css?v=toolbar-polish-20261025">
+  <script type="module" src="toolbar.js?v=toolbar-polish-20261025"></script>
+  <script type="module" src="app.js?v=controls-20261025"></script>
 </head>
 <body>
   <a class="skip-link" href="#feed">Skip to posts</a>
@@ -21,6 +21,13 @@
         <span>archie<span class="wordmark-dot">.</span></span>
       </a>
       <nav class="toolbar-navigation" aria-label="Site navigation">
+        <a class="control-button control-panel-button" href="Sites/ControlPanel.html" aria-label="Control Panel" title="Control Panel">
+          <svg class="tools-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <g class="tool-hammer"><path d="M3 4h7l3 3-2 2-3-2H3V4ZM6 7v16h3V8"/></g>
+            <g class="tool-wrench"><path d="M18 4v5h4V4a5 5 0 0 1 0 9v9a2 2 0 0 1-4 0v-9a5 5 0 0 1 0-9Z"/></g>
+          </svg>
+          <span class="control-label">Control Panel</span>
+        </a>
         <a class="control-button help-button" href="Sites/help.html" aria-label="Help" title="Help">
           <!-- An original question-mark beacon in an angular energy frame. -->
           <svg class="help-icon" viewBox="0 0 28 28" fill="none" aria-hidden="true">
@@ -66,12 +73,12 @@
     <p class="sr-only" id="shuffle-status" role="status" aria-live="polite"></p>
     <noscript><p class="feed-message">Enable JavaScript to load the embedded posts.</p></noscript>
 
-    <footer class="site-footer"><span class="footer-spark" aria-hidden="true">✧</span> A little space for what stays with you.</footer>
+    <footer class="site-footer"><span class="footer-spark" aria-hidden="true">✧</span> Author: <a rel="me noopener noreferrer" target="_blank" href="https://mastodon.social/@gjorgji_vasileski">Gjorgji Vasileski🦣</a></footer>
   </main>
   <script>
-    // Browsers block ES modules and text-file fetching when opened directly.
+    // Browsers block ES modules and data fetching when opened directly.
     if (location.protocol === 'file:') {
-      document.querySelector('#feed-message').textContent = 'To load posts.txt, run python3 -m http.server 8000 in this folder, then open http://localhost:8000.';
+      document.querySelector('#feed-message').textContent = 'To load posts.json, run python3 -m http.server 8000 in this folder, then open http://localhost:8000.';
       document.querySelector('#feed').setAttribute('aria-busy', 'false');
     }
   </script>
