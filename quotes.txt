@@ -37,9 +37,6 @@ Samuel Butler
 Don't learn to do, but learn in doing.
 Samuel Butler
 
-Be kind, for everyone you meet is fighting a harder battle.
-Plato
-
 Human behavior flows from three main sources: desire, emotion, and knowledge.
 Plato
 
@@ -54,3 +51,39 @@ Albert Camus
 
 Try again. Fail again. Fail better.
 Samuel Beckett
+
+The beginning is the most important part of any work.
+Plato
+
+To conquer oneself is the first and best of all victories.
+Plato
+
+Nothing in life is to be feared, it is only to be understood.
+Marie Curie
+
+You may not control all the events that happen to you, but you can decide not to be reduced by them.
+Maya Angelou
+
+If there's a book that you want to read, but it hasn't been written yet, then you must write it.
+Toni Morrison
+
+I'm not afraid of storms, for I'm learning how to sail my ship.
+Louisa May Alcott
+
+I am no bird; and no net ensnares me: I am a free human being with an independent will.
+Charlotte Brontë
+
+Nothing contributes so much to tranquillize the mind as a steady purpose.
+Mary Shelley
+
+What you do makes a difference, and you have to decide what kind of difference you want to make.
+Jane Goodall
+
+That brain of mine is something more than merely mortal; as time will show.
+Ada Lovelace
+
+The more clearly we can focus our attention on the wonders and realities of the universe about us, the less taste we shall have for destruction.
+Rachel Carson
+
+The most dangerous phrase in the language is, "We've always done it this way."
+Grace Hopper
